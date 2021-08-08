@@ -1,18 +1,23 @@
 import { FunctionalComponent, h } from "preact"
 import { Link } from "preact-router"
-import { useState } from "preact/hooks"
+import { useEffect, useState } from "preact/hooks"
 import style from "./style.css"
 
 const Home: FunctionalComponent = () => {
   const [preview, setPreview] = useState("")
   const [full, setFull] = useState("")
+  const [base, setBase] = useState("/")
   const reg = /drive\.google\.com\/file\/d\/([^\/]+)/gm
 
   const id = reg.exec(preview)
   const output = id ? encodeURIComponent(id[1]) : ""
-  const urlOutput = `${
-    window.location
-  }preview?id=${output}&full=${encodeURIComponent(full)}`
+  const urlOutput = `${base}preview?id=${output}&full=${encodeURIComponent(
+    full
+  )}`
+
+  useEffect(() => {
+    if (window) setBase(window.location.toString())
+  }, [])
 
   return (
     <div class={style.home}>
